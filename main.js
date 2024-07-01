@@ -58,12 +58,18 @@ const handleEvent = () => {
             if (currentSlideIndex < 0) {
                 currentSlideIndex = 5;
             }
+        } else if (delta > 0) { // Scroll to the left
+            currentSlideIndex++;
 
-            imagesItem.forEach((item, index) => {
-                const newIndex = (currentSlideIndex + index) % 6;
-                item.style.backgroundImage = imagesUrl[newIndex];
-            });
+            if (currentSlideIndex >= imagesItem.length) {
+                currentSlideIndex = 0;
+            }
         }
+
+        imagesItem.forEach((item, index) => {
+            const newIndex = (currentSlideIndex + index) % 6;
+            item.style.backgroundImage = imagesUrl[newIndex];
+        });
       }
 
       setTimeout(() => {
