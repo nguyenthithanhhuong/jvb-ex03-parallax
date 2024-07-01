@@ -44,25 +44,32 @@ const handleEvent = () => {
         });
     });
 
-    // handle scroll event
-    let isScroll = false;
-    slider.addEventListener('wheel', (event) => {
-        const delta = Math.sign(event.deltaX); 
+  // handle scroll event
+  let isScrolling = false;
+  slider.addEventListener('wheel', (event) => {
+      if (!isScrolling) {
+        isScrolling = true;
+
+        const delta = Math.sign(event.deltaX);
 
         if (delta < 0) { // Scroll to the right
             currentSlideIndex--;
-    
+
             if (currentSlideIndex < 0) {
                 currentSlideIndex = 5;
             }
-    
+
             imagesItem.forEach((item, index) => {
                 const newIndex = (currentSlideIndex + index) % 6;
                 item.style.backgroundImage = imagesUrl[newIndex];
             });
-
         }
-    })
+      }
+
+      setTimeout(() => {
+          isScrolling = false;
+      }, 200); // Reduce execution speed
+  });
 }
 
 const start = () => {
