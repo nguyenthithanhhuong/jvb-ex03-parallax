@@ -6,14 +6,13 @@ const courseApi = 'https://dog.ceo/api/breeds/image/random/6';
 const imagesItem = $$('.slide-item');
 const slider = $('.slider');
 
-let currentSlideIndex = 0;
 const imagesUrl = [];
 
 // Fetch api
 const getImages = (callback) => {
     fetch(courseApi)
-    .then((response) => response.json())
-    .then(callback);
+        .then((response) => response.json())
+        .then(callback);
 }
 
 // Get image from api -> render to layout
@@ -21,7 +20,7 @@ const renderImages = (images) => {
     imagesItem.forEach((item, index) => {
         const imageUrl = images.message[index];
         item.style.backgroundImage = `url('${imageUrl}')`;
-        imagesUrl.push(`url('${imageUrl}')`); // Store image URLs as strings
+        imagesUrl.push(`url('${imageUrl}')`);
     });
 }
 
@@ -43,44 +42,34 @@ const handleEvent = () => {
             });
         });
     });
+}
 
-  // handle scroll event
-  let isScrolling = false;
-  slider.addEventListener('wheel', (event) => {
-      if (!isScrolling) {
-        isScrolling = true;
-
-        const delta = Math.sign(event.deltaX);
-
-        if (delta < 0) { // Scroll to the right
-            currentSlideIndex--;
-
-            if (currentSlideIndex < 0) {
-                currentSlideIndex = 5;
-            }
-        } else if (delta > 0) { // Scroll to the left
-            currentSlideIndex++;
-
-            if (currentSlideIndex >= imagesItem.length) {
-                currentSlideIndex = 0;
-            }
-        }
-
-        imagesItem.forEach((item, index) => {
-            const newIndex = (currentSlideIndex + index) % 6;
-            item.style.backgroundImage = imagesUrl[newIndex];
-        });
-      }
-
-      setTimeout(() => {
-          isScrolling = false;
-      }, 200); // Reduce execution speed
-  });
+// Initialize Swiper
+const initSwiper = () => {
+    new Swiper('.swiper-container', {
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        spaceBetween: 30,
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        mousewheel: {
+            forceToAxis: true,
+        },
+        grabCursor: true,
+    });
 }
 
 const start = () => {
     getImages(renderImages);
     handleEvent();
+    initSwiper();
 }
 
 start();
